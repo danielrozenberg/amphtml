@@ -1161,6 +1161,13 @@ function replaceUrls(mode, file, hostName, inabox, storyV1) {
   return file;
 }
 
+app.get('*.shadow', (req, res) => {
+  fs.readFileAsync(pc.cwd() + '/examples/visual-tests/shadow.html')
+      .then(file => {
+        res.end(file);
+      });
+});
+
 /**
  * @param {string} ampJsVersion
  * @param {string} file

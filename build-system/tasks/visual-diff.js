@@ -28,14 +28,14 @@ const request = BBPromise.promisify(require('request'));
 const sleep = require('sleep-promise');
 const tryConnect = require('try-net-connect');
 const {execOrDie, execScriptAsync} = require('../exec');
-const {FileSystemAssetLoader, Percy} = require('@percy/puppeteer');
+const {FileSystemAssetLoader} = require('@percy/puppeteer');
 const {gitBranchName, gitCommitterEmail} = require('../git');
 
 // CSS widths: iPhone: 375, Pixel: 411, Desktop: 1400.
 const DEFAULT_SNAPSHOT_OPTIONS = {widths: [375, 411, 1400]};
 const SNAPSHOT_EMPTY_BUILD_OPTIONS = {widths: [375]};
 const VIEWPORT_WIDTH = 1400;
-const VIEWPORT_HEIGHT = 100000;
+const VIEWPORT_HEIGHT = 10000;
 const HOST = 'localhost';
 const PORT = 8000;
 const BASE_URL = `http://${HOST}:${PORT}`;
@@ -59,6 +59,26 @@ const WRAP_IN_IFRAME_SCRIPT = fs.readFileSync(
 
 const preVisualDiffTasks =
     (argv.nobuild || argv.verify_status) ? [] : ['build'];
+
+class Percy {
+  startBuild() {}
+  finalizeBuild() {}
+  async snapshot(name, page, options) {
+    for (const width of options.widths) {
+      await page.setViewport({
+        width,
+        height: VIEWPORT_HEIGHT,
+      });
+      await page.screenshot({
+        path: `/home/rodaniel/shadow/${name} (${width}).png`,
+      });
+    }
+    await page.setViewport({
+      width: VIEWPORT_WIDTH,
+      height: VIEWPORT_HEIGHT,
+    });
+  }
+}
 
 /**
  * Logs a message to the console.
@@ -422,7 +442,8 @@ async function generateSnapshots(percy, page, webpages) {
  */
 async function snapshotWebpages(percy, page, webpages, config) {
   for (const webpage of webpages) {
-    const {url, viewport} = webpage;
+    const url = `${webpage.url}.shadow`;
+    const {viewport} = webpage;
     const name = `${webpage.name} (${config})`;
     log('verbose', 'Visual diff test', colors.yellow(name));
 
