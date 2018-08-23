@@ -517,6 +517,9 @@ async function snapshotWebpages(percy, page, webpages, config) {
  */
 async function verifyCssElements(page, url, forbiddenCss, loadingIncompleteCss,
   loadingCompleteCss) {
+  await sleep(3000);
+  return;
+
   // Begin by waiting for all loader dots to disappear.
   await waitForLoaderDot(page, url);
 

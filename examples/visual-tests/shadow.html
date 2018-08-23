@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html️>
+  <head>
+    <meta charset="utf-8">
+    <script async src="https://cdn.ampproject.org/shadow-v0.js"></script>
+    <title>Shadow container</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script>
+function fetchDocument(url) {
+  var xhr = new XMLHttpRequest();
+  return new Promise(function(resolve, reject) {
+    xhr.open('GET', url, true);
+    xhr.responseType = 'document';
+    xhr.setRequestHeader('Accept', 'text/html');
+    xhr.onload = function() {
+      resolve(xhr.responseXML);
+    };
+    xhr.send();
+  });
+}
+
+(window.AMP = window.AMP || []).push(function(AMP) {
+  var container = document.getElementById('main');
+  var url = window.location.href.slice(0, -7);
+  fetchDocument(url).then(function(doc) {
+    var ampedDoc = AMP.attachShadowDoc(container, doc, url);
+  });
+});
+    </script>
+    <style>
+html, body {
+  margin: 0;
+  padding: 0;
+}
+    </style>
+  </head>
+  <body>
+    <div id="main"></div>
+  </body>
+</html>
