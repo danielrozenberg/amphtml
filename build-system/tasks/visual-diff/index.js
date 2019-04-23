@@ -52,6 +52,7 @@ const VIEWPORT_WIDTH = 1400;
 const VIEWPORT_HEIGHT = 100000;
 const HOST = 'localhost';
 const PORT = 8000;
+const HOST_POST_MATCH = /^https?:\/\/(?:\w+\.)*localhost:8000\//;
 const WEBSERVER_TIMEOUT_RETRIES = 10;
 const NAVIGATE_TIMEOUT_MS = 3000;
 const MAX_PARALLEL_TABS = 10;
@@ -204,8 +205,9 @@ async function launchBrowser() {
  * @param {!puppeteer.Browser} browser a Puppeteer controlled browser.
  * @param {JsonObject} viewport optional viewport size object with numeric
  *     fields `width` and `height`.
+ * @param {number} testNumber a number associated with this test for logging.
  */
-async function newPage(browser, viewport = null) {
+async function newPage(browser, viewport = null, testNumber = null) {
   const width = viewport ? viewport.width : VIEWPORT_WIDTH;
   const height = viewport ? viewport.height : VIEWPORT_HEIGHT;
 
@@ -215,6 +217,27 @@ async function newPage(browser, viewport = null) {
   const page = await browser.newPage();
   await page.setViewport({width, height});
   page.setDefaultNavigationTimeout(NAVIGATE_TIMEOUT_MS);
+  await page.setRequestInterception(true);
+  page.on('request', interceptedRequest => {
+    const url = new URL(interceptedRequest.url());
+    const stubbedFilePath = path.resolve(
+        __dirname, 'network-stubs', url.hostname, url.pathname.substr(1));
+    if (url.hostname.match(`\.?${HOST}`) && url.port == PORT) {
+      interceptedRequest.continue();
+    } else if (fs.existsSync(stubbedFilePath)) {
+      log('verbose', colors.cyan(`[#${testNumber}]`),
+          'Responded to non-localhost request', colors.cyan(url),
+          'with stubbed file', colors.yellow(stubbedFilePath));
+      interceptedRequest.respond({
+        status: 200,
+        body: fs.readFileSync(stubbedFilePath),
+      });
+    } else {
+      log('verbose', colors.cyan(`[#${testNumber}]`),
+          'Blocked non-localhost request for', colors.cyan(url));
+      interceptedRequest.abort();
+    }
+  });
   await page.setJavaScriptEnabled(true);
   return page;
 }
@@ -398,10 +421,12 @@ async function snapshotWebpages(percy, browser, webpages) {
       }
 
       const name = testName ? `${pageName} (${testName})` : pageName;
-      log('verbose', 'Visual diff test', colors.yellow(name));
+      log('verbose', colors.cyan(`[#${testNumber}]`), 'Visual diff test',
+          colors.yellow(name));
 
-      const page = await newPage(browser, viewport);
-      log('verbose', 'Navigating to page', colors.yellow(webpage.url));
+      const page = await newPage(browser, viewport, testNumber);
+      log('verbose', colors.cyan(`[#${testNumber}]`), 'Navigating to page',
+          colors.yellow(webpage.url));
 
       // Puppeteer is flaky when it comes to catching navigation requests, so
       // ignore timeouts. If this was a real non-loading page, this will be
@@ -411,15 +436,18 @@ async function snapshotWebpages(percy, browser, webpages) {
       // again.
       const pagePromise = page.goto(fullUrl, {waitUntil: 'networkidle0'})
           .then(() => {
-            log('verbose', 'Page navigation of test', colors.yellow(name),
+            log('verbose', colors.cyan(`[#${testNumber}]`),
+                'Page navigation of test', colors.yellow(name),
                 'is done, verifying page');
           })
           .catch(navigationError => {
             addTestError(testErrors, name,
-                'The browser test runner failed to complete the navigation ' +
-                'to the test page', navigationError, /* fatal */ false);
+                `[#${testNumber}] The browser test runner failed to complete ` +
+                'the navigation to the test page', navigationError,
+                /* fatal */ false);
             if (!isTravisBuild()) {
-              log('warning', 'Continuing to verify page regardless...');
+              log('warning', colors.cyan(`[#${testNumber}]`),
+                  'Continuing to verify page regardless...');
             }
           })
           .then(async() => {
@@ -445,7 +473,7 @@ async function snapshotWebpages(percy, browser, webpages) {
 
             // Based on test configuration, wait for a specific amount of time.
             if (webpage.loading_complete_delay_ms) {
-              log('verbose', 'Waiting',
+              log('verbose', colors.cyan(`[#${testNumber}]`), 'Waiting',
                   colors.cyan(`${webpage.loading_complete_delay_ms}ms`),
                   'for loading to complete');
               await sleep(webpage.loading_complete_delay_ms);
@@ -471,7 +499,8 @@ async function snapshotWebpages(percy, browser, webpages) {
 
             if (viewport) {
               snapshotOptions.widths = [viewport.width];
-              log('verbose', 'Wrapping viewport-constrained page in an iframe');
+              log('verbose', colors.cyan(`[#${testNumber}]`),
+                  'Wrapping viewport-constrained page in an iframe');
               await page.evaluate(WRAP_IN_IFRAME_SNIPPET
                   .replace(/__WIDTH__/g, viewport.width)
                   .replace(/__HEIGHT__/g, viewport.height));
@@ -483,8 +512,9 @@ async function snapshotWebpages(percy, browser, webpages) {
           })
           .catch(testError => {
             log('travis', colors.red('○'));
-            addTestError(testErrors, name, 'Unknown failure in test page',
-                testError, /* fatal */ true);
+            addTestError(testErrors, name,
+                `[#${testNumber}] Unknown failure in test page`, testError,
+                /* fatal */ true);
           })
           .then(async() => {
             await page.close();
