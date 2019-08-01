@@ -139,7 +139,7 @@
     ],
     "object-shorthand": [2, "properties", { "avoidQuotes": true }],
     "prefer-const": 2,
-    "prettier/prettier": 2,
+    "prettier/prettier": 1,
     "radix": 2,
     "require-jsdoc": [2, {
       "require": {
