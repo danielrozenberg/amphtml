@@ -63,7 +63,7 @@ export const ampGeoPresets = {
     'SI', // Slovenia
     'ES', // Spain
     'SE', // Sweden
-    'GB', // United Kingdom
+    'UK', // United Kingdom
     'AX', // Aland Islands
     'IC', // Canary Islands
     'EA', // Ceuta & Melilla
