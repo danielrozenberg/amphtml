@@ -10,6 +10,7 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
+          override-ci-command: yarn install --frozen-lockfile && npm install --global gulp
 
       - run:
           name: Dist
