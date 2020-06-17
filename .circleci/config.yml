@@ -17,8 +17,11 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
       - run:
-          name: Dist
-          command: npx gulp dist
+          name: gulp update-packages
+          command: npx gulp update-packages
+      - run:
+          name: gulp dist --fortesting
+          command: npx gulp dist --fortesting
       - save_cache:
           key: dist-cache-{{ .Revision }}
           paths:
