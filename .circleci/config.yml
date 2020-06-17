@@ -10,19 +10,18 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
-          override-ci-command: yarn install --frozen-lockfile && npm install --global gulp
 
       - run:
           name: Dist
-          command: gulp dist
+          command: npx gulp dist
 
       - run:
           name: Unit Tests
-          command: gulp unit --nobuild --headless
+          command: npx gulp unit --nobuild --headless
 
       - run:
           name: Unit Tests
-          command: gulp integration --nobuild --headless
+          command: npx gulp integration --nobuild --headless
 workflows:
     build-and-test:
       jobs:
