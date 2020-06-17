@@ -20,7 +20,7 @@ jobs:
           command: npx gulp unit --nobuild --headless
 
       - run:
-          name: Unit Tests
+          name: Integration Tests
           command: npx gulp integration --nobuild --headless
 workflows:
     build-and-test:
