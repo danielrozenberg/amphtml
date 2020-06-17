@@ -20,7 +20,7 @@ jobs:
           name: Dist
           command: npx gulp dist
       - save_cache:
-          key: dist-cache-{{ .BuildNum }}
+          key: dist-cache-{{ .Revision }}
           paths:
             - dist
             - dist.3p
@@ -34,7 +34,7 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
       - restore_cache:
-          key: dist-cache-{{ .BuildNum }}
+          key: dist-cache-{{ .Revision }}
       - run:
           name: gulp unit --nobuild --headless
           command: npx gulp unit --nobuild --headless
@@ -47,7 +47,7 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
       - restore_cache:
-          key: dist-cache-{{ .BuildNum }}
+          key: dist-cache-{{ .Revision }}
       - run:
           name:  gulp integration --nobuild --headless
           command: npx gulp integration --nobuild --headless
