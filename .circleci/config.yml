@@ -22,7 +22,8 @@ jobs:
       - 
 
   unit-tests:
-    executor: amphtml-executor
+    executor:
+      name: amphtml-executor
     steps:
       - checkout
       - node/install-packages:
@@ -32,7 +33,8 @@ jobs:
         command: npx gulp unit --nobuild --headless
 
   inregration-tests:
-    executor: amphtml-executor
+    executor:
+      name: amphtml-executor
     - steps:
       - checkout
       - node/install-packages:
