@@ -19,21 +19,37 @@ jobs:
       - run:
           name: Dist
           command: npx gulp dist
+      - save_cache:
+          key: dist-cache-{{ .BuildNum }}
+          paths:
+            - dist
+            - dist.3p
+            - dist.tools
 
   unit-tests:
     executor:
       name: amphtml-executor
     steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - restore_cache:
+          key: dist-cache-{{ .BuildNum }}
       - run:
-          name: Unit Tests
+          name: gulp unit --nobuild --headless
           command: npx gulp unit --nobuild --headless
 
   integration-tests:
     executor:
       name: amphtml-executor
     steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - restore_cache:
+          key: dist-cache-{{ .BuildNum }}
       - run:
-          name: Integration Tests
+          name:  gulp integration --nobuild --headless
           command: npx gulp integration --nobuild --headless
         
 
