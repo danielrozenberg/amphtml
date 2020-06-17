@@ -1,11 +1,17 @@
 version: 2.1
+
 orbs:
   node: circleci/node@3.0.0
+
+executors:
+  amphtml-executor:
+    docker:
+      - image: circleci/node:lts-browsers
+
 jobs:
   build-and-test:
     executor:
-      name: node/default
-      tag: lts
+      name: amphtml-executor/default
     steps:
       - checkout
       - node/install-packages:
