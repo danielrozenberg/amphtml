@@ -28,7 +28,7 @@ jobs:
           name: Unit Tests
           command: npx gulp unit --nobuild --headless
 
-  inregration-tests:
+  integration-tests:
     executor:
       name: amphtml-executor
     steps:
