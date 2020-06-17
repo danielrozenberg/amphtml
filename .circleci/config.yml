@@ -14,11 +14,18 @@ jobs:
       name: amphtml-executor
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: yarn
+      - restore_cache:
+          key: node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: yarn
+          command: yarn install --frozen-lockfile
       - run:
           name: gulp update-packages
           command: npx gulp update-packages
+      - save_cache:
+          key: node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
       - run:
           name: gulp dist --fortesting
           command: npx gulp dist --fortesting
@@ -35,8 +42,8 @@ jobs:
       name: amphtml-executor
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: yarn
+      - restore_cache:
+          key: node-modules-{{ checksum "yarn.lock" }}
       - restore_cache:
           key: dist-cache-{{ .Revision }}
       - run:
@@ -48,8 +55,8 @@ jobs:
       name: amphtml-executor
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: yarn
+      - restore_cache:
+          key: node-modules-{{ checksum "yarn.lock" }}
       - restore_cache:
           key: dist-cache-{{ .Revision }}
       - run:
