@@ -22,6 +22,7 @@ jobs:
       - save_cache:
           key: dist-cache-{{ .Revision }}
           paths:
+            - build
             - dist
             - dist.3p
             - dist.tools
