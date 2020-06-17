@@ -9,18 +9,18 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
-          steps:
-          - run:
-              name: Dist
-              command: gulp dist
 
-          - run:
-              name: Unit Tests
-              command: gulp unit --nobuild --headless
+      - run:
+          name: Dist
+          command: gulp dist
 
-          - run:
-              name: Unit Tests
-              command: gulp integration --nobuild --headless
+      - run:
+          name: Unit Tests
+          command: gulp unit --nobuild --headless
+
+      - run:
+          name: Unit Tests
+          command: gulp integration --nobuild --headless
 workflows:
     build-and-test:
       jobs:
