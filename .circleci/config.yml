@@ -25,9 +25,6 @@ jobs:
     executor:
       name: amphtml-executor
     steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: yarn
       - run:
         name: Unit Tests
         command: npx gulp unit --nobuild --headless
@@ -36,9 +33,6 @@ jobs:
     executor:
       name: amphtml-executor
     - steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: yarn
       - run:
           name: Integration Tests
           command: npx gulp integration --nobuild --headless
