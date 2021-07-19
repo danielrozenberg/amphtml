@@ -128,7 +128,7 @@ jobs:
           command: node build-system/pr-check/unminified-build.js
       - fail_fast
       - teardown_vm
-  'Nomodule Build':
+  'Testable Nomodule Build':
     executor:
       name: amphtml-xlarge-executor
     steps:
@@ -143,7 +143,7 @@ jobs:
           path: /tmp/artifacts/amp_nomodule_build.tar.gz
       - fail_fast
       - teardown_vm
-  'Module Build':
+  'Testable Module Build':
     executor:
       name: amphtml-xlarge-executor
     steps:
@@ -153,9 +153,29 @@ jobs:
           command: node build-system/pr-check/module-build.js
       - fail_fast
       - teardown_vm
-  'Bundle Size':
+  'Production Nomodule Build':
     executor:
       name: amphtml-xlarge-executor
+    steps:
+      - setup_vm
+      - run:
+          name: 'Nomodule Build'
+          command: node build-system/pr-check/bundle-size-nomodule-build.js
+      - fail_fast
+      - teardown_vm
+  'Production Module Build':
+    executor:
+      name: amphtml-xlarge-executor
+    steps:
+      - setup_vm
+      - run:
+          name: 'Module Build'
+          command: node build-system/pr-check/bundle-size-module-build.js
+      - fail_fast
+      - teardown_vm
+  'Bundle Size':
+    executor:
+      name: amphtml-medium-executor
     steps:
       - setup_vm
       - run:
@@ -345,21 +365,35 @@ workflows:
           requires:
             - 'Compute Merge Commit'
       - 'Unminified Build':
+          name: 'Unminified Build (debug)'
           <<: *push_and_pr_builds
           requires:
             - 'Compute Merge Commit'
-      - 'Nomodule Build':
+      - 'Testable Nomodule Build':
+          name: 'Nomodule Build (debug)'
           <<: *push_and_pr_builds
           requires:
             - 'Compute Merge Commit'
-      - 'Module Build':
+      - 'Testable Module Build':
+          name: 'Module Build (debug)'
+          <<: *push_and_pr_builds
+          requires:
+            - 'Compute Merge Commit'
+      - 'Production Nomodule Build':
+          name: 'Nomodule Build (release)'
+          <<: *push_and_pr_builds
+          requires:
+            - 'Compute Merge Commit'
+      - 'Production Module Build':
+          name: 'Module Build (release)'
           <<: *push_and_pr_builds
           requires:
             - 'Compute Merge Commit'
       - 'Bundle Size':
           <<: *push_and_pr_builds
           requires:
-            - 'Compute Merge Commit'
+            - 'Nomodule Build (release)'
+            - 'Module Build (release)'
       - 'Validator Tests':
           <<: *push_and_pr_builds
           requires:
@@ -367,7 +401,7 @@ workflows:
       - 'Visual Diff Tests':
           <<: *push_and_pr_builds
           requires:
-            - 'Nomodule Build'
+            - 'Nomodule Build (debug)'
       - 'Local Unit Tests':
           <<: *push_and_pr_builds
           requires:
@@ -380,7 +414,7 @@ workflows:
       - 'Unminified Tests':
           <<: *push_and_pr_builds
           requires:
-            - 'Unminified Build'
+            - 'Unminified Build (debug)'
       - 'Nomodule Tests':
           name: 'Nomodule Tests (<< matrix.config >>)'
           matrix:
@@ -388,7 +422,7 @@ workflows:
               config: ['prod', 'canary']
           <<: *push_and_pr_builds
           requires:
-            - 'Nomodule Build'
+            - 'Nomodule Build (debug)'
       - 'Module Tests':
           name: 'Module Tests (<< matrix.config >>)'
           matrix:
@@ -396,13 +430,13 @@ workflows:
               config: ['prod', 'canary']
           <<: *push_and_pr_builds
           requires:
-            - 'Nomodule Build'
-            - 'Module Build'
+            - 'Nomodule Build (debug)'
+            - 'Module Build (debug)'
       - 'End-to-End Tests':
           name: '⛓️ End-to-End Tests'
           <<: *push_and_pr_builds
           requires:
-            - 'Nomodule Build'
+            - 'Nomodule Build (debug)'
       - 'Experiment Build':
           name: 'Experiment << matrix.exp >> Build'
           matrix:
@@ -431,4 +465,4 @@ workflows:
       # - 'Performance Tests':
       #     <<: *push_builds_only
       #     requires:
-      #       - 'Nomodule Build'
+      #       - 'Nomodule Build (debug)'
