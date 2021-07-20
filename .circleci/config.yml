@@ -102,7 +102,7 @@ commands:
                 command: circleci-agent step halt
 
 jobs:
-  'Compute Merge Commit':
+  'Initialized Git':
     executor:
       name: amphtml-small-executor
     steps:
@@ -354,37 +354,37 @@ jobs:
 workflows:
   'CircleCI':
     jobs:
-      - 'Compute Merge Commit':
+      - 'Initialized Git':
           <<: *push_and_pr_builds
       - 'Checks':
           <<: *push_and_pr_builds
           requires:
-            - 'Compute Merge Commit'
+            - 'Initialized Git'
       - 'Unminified Build':
           name: 'Unminified Build (debug)'
           <<: *push_and_pr_builds
           requires:
-            - 'Compute Merge Commit'
+            - 'Initialized Git'
       - 'Testable Nomodule Build':
           name: 'Nomodule Build (debug)'
           <<: *push_and_pr_builds
           requires:
-            - 'Compute Merge Commit'
+            - 'Initialized Git'
       - 'Testable Module Build':
           name: 'Module Build (debug)'
           <<: *push_and_pr_builds
           requires:
-            - 'Compute Merge Commit'
+            - 'Initialized Git'
       - 'Production Nomodule Build':
           name: 'Nomodule Build (release)'
           <<: *push_and_pr_builds
           requires:
-            - 'Compute Merge Commit'
+            - 'Initialized Git'
       - 'Production Module Build':
           name: 'Module Build (release)'
           <<: *push_and_pr_builds
           requires:
-            - 'Compute Merge Commit'
+            - 'Initialized Git'
       - 'Bundle Size':
           <<: *push_and_pr_builds
           requires:
@@ -393,7 +393,7 @@ workflows:
       - 'Validator Tests':
           <<: *push_and_pr_builds
           requires:
-            - 'Compute Merge Commit'
+            - 'Initialized Git'
       - 'Visual Diff Tests':
           <<: *push_and_pr_builds
           requires:
@@ -401,7 +401,7 @@ workflows:
       - 'Local Unit Tests':
           <<: *push_and_pr_builds
           requires:
-            - 'Compute Merge Commit'
+            - 'Initialized Git'
       - 'All Unit Tests':
           name: '⛓️ All Unit Tests'
           <<: *push_and_pr_builds
@@ -440,7 +440,7 @@ workflows:
               exp: ['A', 'B', 'C']
           <<: *push_and_pr_builds
           requires:
-            - 'Compute Merge Commit'
+            - 'Initialized Git'
       - 'Experiment Integration Tests':
           name: 'Exp. << matrix.exp >> Integration Tests'
           matrix:
