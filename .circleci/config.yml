@@ -191,7 +191,7 @@ jobs:
       - teardown_vm
   'Local Unit Tests':
     executor:
-      name: amphtml-large-executor
+      name: amphtml-medium-executor
     steps:
       - skip_on_push_builds
       - setup_vm
@@ -204,7 +204,7 @@ jobs:
       - teardown_vm
   'All Unit Tests':
     executor:
-      name: amphtml-large-executor
+      name: amphtml-medium-executor
     parallelism: 4
     steps:
       - setup_vm
@@ -216,7 +216,7 @@ jobs:
       - teardown_vm
   'Unminified Tests':
     executor:
-      name: amphtml-large-executor
+      name: amphtml-medium-executor
     steps:
       - setup_vm
       - install_chrome
@@ -228,7 +228,7 @@ jobs:
       - teardown_vm
   'Nomodule Tests':
     executor:
-      name: amphtml-large-executor
+      name: amphtml-medium-executor
     parameters:
       config:
         description: 'Which config file to use'
@@ -245,7 +245,7 @@ jobs:
       - teardown_vm
   'Module Tests':
     executor:
-      name: amphtml-large-executor
+      name: amphtml-medium-executor
     parameters:
       config:
         description: 'Which config file to use'
@@ -262,7 +262,7 @@ jobs:
       - teardown_vm
   'End-to-End Tests':
     executor:
-      name: amphtml-large-executor
+      name: amphtml-medium-executor
     parallelism: 4
     steps:
       - setup_vm
@@ -301,7 +301,7 @@ jobs:
       - teardown_vm
   'Experiment Integration Tests':
     executor:
-      name: amphtml-large-executor
+      name: amphtml-medium-executor
     parameters:
       exp:
         description: 'Which of the three (A/B/C) experiments to use'
@@ -318,7 +318,7 @@ jobs:
       - teardown_vm
   'Experiment End-to-End Tests':
     executor:
-      name: amphtml-large-executor
+      name: amphtml-medium-executor
     parameters:
       exp:
         description: 'Which of the three (A/B/C) experiments to use'
