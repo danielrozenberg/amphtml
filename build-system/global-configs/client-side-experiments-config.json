@@ -2,7 +2,7 @@
   "experiments": [
     {
       "name": "flexible-bitrate",
-      "percentage": 0.3
+      "percentage": 0.4
     },
     {
       "name": "amp-story-desktop-one-panel",
