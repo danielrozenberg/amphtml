@@ -1,15 +1,14 @@
 {
   "experiments": [
     {
-      "name": "flexible-bitrate",
-      "percentage": 0.3,
+      "name": "flexible-bitrate"
     },
     {
       "name": "amp-story-desktop-one-panel",
-      "percentage": 1
+      "percentage": 100
     },
     {
-      "name": "amp-story-first-page-max-bitrate",
+      "name": "amp-story-first-page-max-bitrate"
       "percentage": 0.3
     },
     {
