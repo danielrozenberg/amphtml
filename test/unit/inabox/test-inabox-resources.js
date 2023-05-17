@@ -6,7 +6,7 @@ import {InaboxResources} from '#inabox/inabox-resources';
 
 import {ResourceState_Enum} from '#service/resource';
 
-import {macroTask} from '#testing/helpers';
+import {macroTask, sleep} from '#testing/helpers';
 
 describes.realWin('inabox-resources', {amp: true}, (env) => {
   let win;
@@ -184,8 +184,7 @@ describes.realWin('inabox-resources', {amp: true}, (env) => {
     resources.upgraded(element1);
 
     resources.schedulePass(0);
-    await new Promise(setTimeout);
-    await new Promise(setTimeout);
+    await sleep(75);
 
     expect(resource1.measure).to.be.called;
     expect(resource2.measure).to.not.be.called;
