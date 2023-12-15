@@ -118,13 +118,13 @@ The built framework can be found in directory `release/org-cdn/rtv/<rtv>/`. The 
 
 ### Option 3: Manually copy the framework from cdn.ampproject.org
 
-The AMP framework can be copied from `cdn.ampproject.org`. The latest weekly release is always served from the root of `cdn.ampproject.org`. All [non-deprecated releases](./amp-versioning-policy.md#version-deprecations) can be found in versioned URLs: `cdn.ampproject.org/rtv/<rtv>`, where `<rtv>` is the runtime version.
+The AMP framework can be copied from `cdn.ampproject.org`. The latest monthly release is always served from the root of `cdn.ampproject.org`. All [non-deprecated releases](./amp-versioning-policy.md#version-deprecations) can be found in versioned URLs: `cdn.ampproject.org/rtv/<rtv>`, where `<rtv>` is the runtime version.
 
 Note: The AMP Project is looking into options for packaging releases ([#27726](https://github.com/ampproject/amphtml/issues/27726)).
 
 #### Copy files
 
-A listing of files in each release can be found in `files.txt` at the root of the framework distribution. For example, the files included in the current weekly release are listed in [cdn.ampproject.org/files.txt](https://cdn.ampproject.org/files.txt). Use your favorite HTTP client to download all of the files in `files.txt`, retaining path structures.
+A listing of files in each release can be found in `files.txt` at the root of the framework distribution. For example, the files included in the current monthly release are listed in [cdn.ampproject.org/files.txt](https://cdn.ampproject.org/files.txt). Use your favorite HTTP client to download all of the files in `files.txt`, retaining path structures.
 
 #### Undo amp-geo dynamic modification
 
@@ -209,7 +209,7 @@ If hosting a single AMP framework version is your end goal, then you can update 
 
 #### Versionless URLs
 
-The AMP Project has a [weekly release channel](https://amp.dev/documentation/guides-and-tutorials/learn/spec/release-schedule/#weekly), sometimes referred to as the "evergreen" release channel. AMP pages utilize this channel by including versionless URLs to AMP scripts and styles. This is relatively easy to accomplish when hosting the AMP framework yourself. The key is to ensure that the AMP framework hosted from versionless URLs is _also_ available from rtv-specific URLs. This suggests an update strategy: first make a new AMP framework version available from rtv-specific URLs and _then_ update the AMP framework available from versionless URLs. For example, if stable AMP framework version `2002290616360` is available from `https://example.com/amp`, then it must also be available from `https://example.com/amp/rtv/012002290616360`. In this case, AMP meta and script URLs would look like the following:
+The AMP Project has a [monthly release channel](https://amp.dev/documentation/guides-and-tutorials/learn/spec/release-schedule/#monthly), sometimes referred to as the "evergreen" release channel. AMP pages utilize this channel by including versionless URLs to AMP scripts and styles. This is relatively easy to accomplish when hosting the AMP framework yourself. The key is to ensure that the AMP framework hosted from versionless URLs is _also_ available from rtv-specific URLs. This suggests an update strategy: first make a new AMP framework version available from rtv-specific URLs and _then_ update the AMP framework available from versionless URLs. For example, if stable AMP framework version `2002290616360` is available from `https://example.com/amp`, then it must also be available from `https://example.com/amp/rtv/012002290616360`. In this case, AMP meta and script URLs would look like the following:
 
 ```
 <meta name="runtime-host" content="https://example.com/amp">
@@ -250,8 +250,8 @@ The properties are defined as follows:
 -   `ampCssUrl` (optional) is a URL to the boilerplate CSS for the current stable runtime version.
 -   `canaryPercentage` (optional) indicates the fraction of users who receive the experimental runtime version of the AMP framework instead of the current stable runtime version.
 -   `diversions` (optional) lists active non-stable runtime versions.
--   `ltsRuntimeVersion` (optional) is the current [long-term stable](../lts-release.md) runtime version.
--   `ltsCssUrl` (optional) is a URL to the boilerplate CSS for the current long-term stable runtime version.
+-   `ltsRuntimeVersion` (legacy property, unused).
+-   `ltsCssUrl` (legacy property, unused).
 
 ### amp-geo hotpatching
 

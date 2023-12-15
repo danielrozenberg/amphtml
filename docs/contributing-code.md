@@ -175,7 +175,7 @@ These guidelines are specific to the amphtml repository. Other ampproject repos 
 
 ## Cherry-picks
 
-We have a well-defined process for handling requests for changes to the **experimental**/**beta**, **stable**, or **lts** release builds. These changes are known as "cherry-picks".
+We have a well-defined process for handling requests for changes to the **experimental**/**beta** or the **stable** release builds. These changes are known as "cherry-picks".
 
 > Note: We do not support cherry-picks into the **nightly** release channel; in the event of security or privacy issues, a rollback is performed instead.
 
@@ -197,17 +197,17 @@ The following outlines the process to request a cherry-pick.
 
 -   Ensure there is a [bug report](https://github.com/ampproject/amphtml/issues/new?assignees=&labels=Type%3A+Bug&template=bug-report.yml) filed for the problem, and ensure it is resolved _before_ filing the cherry-pick request.
 -   Escalate the issue to P0 by attaining consensus from one or more members of the [Approvers Working Group (WG)](https://github.com/ampproject/wg-approvers) (if you are a member of this working group, you may not count your voice for consensus purposes)
--   File the cherry-pick request issue using the [Cherry-pick request template](https://github.com/ampproject/amphtml/issues/new?assignees=&labels=Type:+Release,Cherry-pick:+Beta,Cherry-pick:+Experimental,Cherry-pick:+LTS,Cherry-pick:+Stable&template=cherry-pick-request.yml&title=%F0%9F%8C%B8+Cherry-pick+request+for+%23ISSUE+into+%23RELEASE). Follow the instructions in the template, providing all the requested data. **Make sure you fill out this issue completely or your cherry-pick may not be seen or acted upon.**
+-   File the cherry-pick request issue using the [Cherry-pick request template](https://github.com/ampproject/amphtml/issues/new?assignees=&labels=Type:+Release,Cherry-pick:+Beta,Cherry-pick:+Experimental,Cherry-pick:+Stable&template=cherry-pick-request.yml&title=%F0%9F%8C%B8+Cherry-pick+request+for+%23ISSUE+into+%23RELEASE). Follow the instructions in the template, providing all the requested data. **Make sure you fill out this issue completely or your cherry-pick may not be seen or acted upon.**
 -   Get the necessary approval for your cherry-pick, indicated via comments on the cherry-pick request issue.
     -   For cherry-picks into **experimental**/**beta**, at least one member of the [Approvers WG](https://github.com/orgs/ampproject/teams/wg-approvers/members) must approve the cherry-pick/rollback.
-    -   For cherry-picks into **stable**/**lts** at least one member from the [Cherry-Pick Approvers group](https://github.com/orgs/ampproject/teams/cherry-pick-approvers/members) must approve the cherry-pick.
+    -   For cherry-picks into **stable** at least one member from the [Cherry-Pick Approvers group](https://github.com/orgs/ampproject/teams/cherry-pick-approvers/members) must approve the cherry-pick.
 -   Once approved, the on-duty engineer handling releases will work with you to ensure the cherry-pick is made.
 -   **Once the cherry-pick is made you are responsible for verifying the cherry-pick fixes the issue and does not cause other issues.**
 
 **If you are requesting a cherry-pick to fix an issue in production** it is likely you will _also_ need a cherry-pick into the **experimental**/**beta** releases. Problems cherry-picked in **stable** could be overridden after promoting **beta**. The on-duty engineer will help determine if you need to cherry-pick both release channels.
 
-**It is possible that a P0 issue gets _discovered_ on Monday or Tuesday, when it was _already present_ in the code-base in the previous week.** When that happens, the previous week's **nightly** release (which is bound to be promoted to **experimental**/**beta** on Tuesday morning) will contain the offending code without the fix. In this case, the release on-duty engineer must perform a cherry-pick before promoting last week's **nightly** to **experimental**/**beta**.
+**It is possible that a P0 issue gets _discovered_ when it was _already present_ in the code-base in the previous weeks.** When that happens, the previous weeks' **nightly** release (the latest of which is bound to be promoted to **experimental**/**beta** on the next release cycle) will contain the offending code without the fix. In this case, the release on-duty engineer must perform a cherry-pick before promoting this **nightly** to **experimental**/**beta**.
 
-> Note: While the cherry-pick is performed on top of last week's **nightly** release, we do not promote that fix to the **nightly** release channel. This is because the cherry-pick is performed on top of a previous nightly release, not on top of the latest.
+> Note: While the cherry-pick is performed on top of a **nightly** release, we do not promote that fix to the **nightly** release channel itself. This is because the nightly channel is completely automated.
 
 If you run into any issues or have any questions when requesting a cherry-pick, please use the [AMP Slack #release channel](https://amphtml.slack.com/messages/C4NVAR0H3/) ([sign up for Slack](https://bit.ly/amp-slack-signup)).
